@@ -1,0 +1,38 @@
+syntax = "proto3";
+package usersvc;
+option go_package = "github.com/KindCloud97/telegram-bot/usersvc";
+
+
+// UserService deliver communication with users that wants to chat with operator.
+//
+//The first step is to call GetList method to obtain a queue of users that want to chat with an operator,
+// then you initiate a connection to a user by calling Connect method
+// and sending the users's id in metadata.
+service UserService {
+  // GetList get list of users that wants to chat with operator.
+  rpc GetList(GetListRequest) returns (GetListResponse) {}
+  // Connect establishes a bi-directional communication channel.
+  // Any sent message will be redirected to the connected customer
+  // and recieve returns messages from the customer.
+  rpc Connect(stream Message) returns (stream Message) {}
+}
+
+// The request message containing the users.
+message GetListRequest {}
+
+// The response message containing the connected users.
+message GetListResponse {
+  repeated User users = 1;
+}
+
+message User {
+   // Custom generated id.
+  string id = 1;
+  string name = 2;
+  string surname = 3;
+}
+
+message Message {
+  string text = 1;
+  string image = 2;
+}
